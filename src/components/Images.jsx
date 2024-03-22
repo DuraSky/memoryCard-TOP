@@ -1,25 +1,38 @@
 import React, { useEffect, useState } from "react";
+import UserPicks from "./GameRules";
 
-export default function Images() {
+export default function Images({ setPickedPokemon, gameLost }) {
   const [pokemonImages, setPokemonImages] = useState({});
+  const [shuffledNames, setShuffledNames] = useState([]);
 
-  const getName = (name) => {
-    return console.log(name.name);
+  const getNameAndShuffle = ({ name }) => {
+    console.log(name);
+    setPickedPokemon(name);
+    shuffle(pokemonNames); // Call shuffle function here
+  };
+
+  const pokemonNames = [
+    "charizard",
+    "pikachu",
+    "bulbasaur",
+    "raichu",
+    "squirtle",
+    "eevee",
+  ];
+
+  const shuffle = (array) => {
+    const shuffledArray = [...array].sort(() => Math.random() - 0.5);
+    setShuffledNames(shuffledArray);
   };
 
   useEffect(() => {
-    const pokemonNames = [
-      "charizard",
-      "pikachu",
-      "bulbasaur",
-      "raichu",
-      "squirtle",
-      "eevee",
-    ];
+    shuffle(pokemonNames); // Initial shuffle when component mounts
+  }, []);
 
+  useEffect(() => {
     const fetchPokemonImages = async () => {
       const images = {};
-      for (const name of pokemonNames) {
+      for (const name of shuffledNames) {
         try {
           const response = await fetch(
             `https://pokeapi.co/api/v2/pokemon/${name}`,
@@ -33,18 +46,22 @@ export default function Images() {
       setPokemonImages(images);
     };
 
-    fetchPokemonImages();
-  }, []);
+    if (shuffledNames.length > 0) {
+      fetchPokemonImages();
+    }
+  }, [shuffledNames]);
 
   return (
-    <div>
+    <div className="pokeCards">
       {Object.keys(pokemonImages).map((name) => (
         <img
           key={name}
           src={pokemonImages[name]}
           alt={name}
           width="150px"
-          onClick={() => getName({ name })}
+          onClick={() => {
+            if (gameLost === false) getNameAndShuffle({ name });
+          }}
         />
       ))}
     </div>
