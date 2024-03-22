@@ -3,11 +3,13 @@ import ReactDOM from "react-dom/client";
 import Images from "./components/Images.jsx";
 import UserPicks from "./components/GameRules.jsx";
 import ScoreBoard from "./components/ScoreBoard.jsx";
+import "./components/style.css";
 
 function Pokemon() {
   const [pickedPokemon, setPickedPokemon] = useState("");
   const [picksArray, setPicksArray] = useState([]);
   const [gameLost, setGameLost] = useState(false);
+  const [gameWon, setGameWon] = useState(false);
   const [score, setScore] = useState(0);
 
   return (
@@ -22,8 +24,10 @@ function Pokemon() {
         setGameLost={setGameLost}
         score={score}
         setScore={setScore}
+        setGameWon={setGameWon}
+        gameWon={gameWon}
       />
-      <ScoreBoard score={score} gameLost={gameLost} />
+      <ScoreBoard score={score} gameLost={gameLost} gameWon={gameWon} />
     </React.StrictMode>
   );
 }

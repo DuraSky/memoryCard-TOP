@@ -9,24 +9,23 @@ export default function UserPicks({
   setGameLost,
   score,
   setScore,
+  setGameWon,
+  gameWon,
 }) {
   const gameReset = () => {
     setGameLost(false);
+    setGameWon(false);
     setScore(0);
     setPicksArray([]);
     setPickedPokemon("");
   };
 
-  // Effect for handling the first user click
   useEffect(() => {
     if (pickedPokemon !== "") {
-      // Increment the score for the first user click
       setScore((prevScore) => prevScore + 1);
 
-      // Update the picksArray with the pickedPokemon
       setPicksArray((prevArray) => [...prevArray, pickedPokemon]);
 
-      // Reset pickedPokemon after updating the picksArray
       setPickedPokemon("");
     }
   }, [pickedPokemon, setPicksArray, setPickedPokemon]);
@@ -45,6 +44,11 @@ export default function UserPicks({
         setScore((prevScore) => prevScore - 1);
         setGameLost(true); // Set gameLost to true if a duplicate is found
       }
+
+      if (score === 6) {
+        setScore(score);
+        setGameWon(true);
+      }
     }
   }, [picksArray]);
 
@@ -52,10 +56,19 @@ export default function UserPicks({
     <div className="current score">
       <h1>Score is: {score}</h1>
 
-      {gameLost === true && (
-        <div>
-          <h1>Youve Lost the Game</h1>
-          <button type="button" onClick={() => gameReset()}>
+      {gameLost && (
+        <div className="gameOver">
+          <h1>You've Lost the Game</h1>
+          <button type="button" className="gameOverButton" onClick={gameReset}>
+            Replay
+          </button>
+        </div>
+      )}
+
+      {gameWon && (
+        <div className="gameOver">
+          <h1>Congratulations, you win!</h1>
+          <button type="button" className="gameOverButton" onClick={gameReset}>
             Replay
           </button>
         </div>

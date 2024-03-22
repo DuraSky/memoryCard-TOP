@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 
-export default function ScoreBoard({ score, gameLost }) {
+export default function ScoreBoard({ score, gameLost, gameWon }) {
   const [highScore, setHighScore] = useState(0);
 
   useEffect(() => {
-    if (score > highScore && gameLost === true) {
+    // Update high score if game is won or if game is lost and current score is higher
+    if (gameWon || (gameLost && score > highScore)) {
       setHighScore(score);
     }
-  }, [score, highScore]);
+  }, [score, highScore, gameLost, gameWon]);
 
   return (
     <div className="high score">
